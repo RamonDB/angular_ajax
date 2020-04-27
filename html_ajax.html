@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<link rel="stylesheet" href="" /> <!--adicionar fonte do css-->
+<style type="text/css">
+
+	*{margin:0;padding:0;box-sizing: border-box;} /*SE TOCAR NESSAS CONFIGURAÇÕES, RETIRANDO A MARGEM/PADDING PADRÕES E O BOXSIZING*/
+
+</style>
+<head>
+	<title></title> <!--nome do site-->
+</head>
+<body>
+
+	<div ng-app="myApp" ng-controller="myCtrl">
+		<div ng-bind-html="resposta"></div>
+
+
+	</div>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-route.js"></script> <!--notar script dentro do body-->
+	<script>
+		var obj = {method:'GET',url:'ajax.html',};
+		var app = angular.module('myApp',[]);
+
+		//Chamar os objetos html sendo lidos dessa maneira, sem ser o código da página
+
+		app.controller('myCtrl', function($scope, $http, $sce){
+			$http(obj).then(function mySucess(response){
+				$scope.resposta = $sce.trustAsHtml(response.data);
+			}, function myError(response){
+				$scope.myWelcome = response.statusText;
+			});
+		});
+		
+		//Routing, para deixar as páginas em servidor e chamá-las com o angular
+
+		var app2 = angular.module('myApp', ["ngRoute"]);
+		app.config( function($routeProvider) {
+			$routeProvider
+			.when('/', { //quando o parâmetro routeProvider (provedor de caminho, que fica em HREF - bem lógico no caso) tiver a
+						// condição '/', o valor da propriedade templateURL será ajax.html
+				templateUrl:'ajax.html'
+			})
+			.when('/red',{
+				templateUrl: 'red.html'
+			})
+		});
+	   
+	
+	</script>
+</body>
+
+
+
+</body>
+
+</html>
